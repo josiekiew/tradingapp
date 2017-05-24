@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Trades Index Page</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styles.css" type="text/css" >
+</head>
+<body>
+<h1>Trades Index Page</h1>
+<h2>Basic functionality</h2>
+<ul>
+<li><a href="trades/list">List all trades as JSON</a></li>
+<li><a href="trades/stats">Get monitoring statistics</a></li>
+<li><a href="trades/reconcile">EOD Reconciliation</a></li>
+<li><a href="swagger-ui.html">Swagger UI</a></li>
+</ul>
+<h2>Place a Trade</h2>
+<form action="trades/place" method="POST">
+    <table>
+        <tr><td>Transaction ID:</td><td><input type="text" name="transid" placeholder="transaction id"></td></tr>
+        <tr><td>Stock:</td><td><input type="text" name="stock" placeholder="stock ticker"></td></tr>
+        <tr><td>Placement Date &amp; Time:</td><td><input type="text" name="ptime" placeholder="yyyy-mm-dd hh:mm:ss"></td></tr>
+        <tr><td>Price:</td><td><input type="number" name="price" placeholder="price in dollars"></td></tr>
+        <tr><td>Volume:</td><td><input type="number" name="volume" placeholder="quantity"></td></tr>
+        <tr><td>Buy or Sell:</td><td><input type="text" name="buysell" maxlength="1" placeholder="B or S"></td></tr>
+        <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+</form>
+<h2>Change Trade State (testing)</h2>
+<form action="trades/modify" method="POST">
+    <table>
+        <tr><td>Transaction ID:</td><td><input type="text" name="transid" placeholder="transaction id"></td></tr>
+        <tr><td>Price:</td><td><input type="number" name="price" placeholder="price in dollars"></td></tr>
+        <tr><td>Volume:</td><td><input type="number" name="volume" placeholder="quantity"></td></tr>
+        <tr><td>Buy or Sell:</td><td><input type="text" name="buysell" maxlength="1" placeholder="B or S"></td></tr>
+        <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+</form>
+
+<form action="tradestest/setstate" method="POST">
+    <table>
+        <tr><td>Transaction ID:</td><td><input type="text" name="transid" placeholder="transaction id"></td></tr>
+        <tr><td>State:</td><td><select name='state'>
+        	<option value='A'>Accept</option>
+        	<option value='C'>Cancel</option>
+        	<option value='D'>Deny</option>
+        	<option value='E'>Execute</option>
+        	<option value='R'>Reject</option>
+        	<option value='S'>Settle</option>
+        </select></td></tr>
+        <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+</form>
+
+<h2>GUI Application</h2>
+<ul>
+<li><a href="trades.html">Demo GUI using Boostrap/Angular JS</a></li>
+</ul>
+</body>
+</html>

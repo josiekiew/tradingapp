@@ -1,0 +1,6 @@
+/target/
+/doc/
+/**/*.log
+/.idea/
+trades.iml
+mvnenv.bat

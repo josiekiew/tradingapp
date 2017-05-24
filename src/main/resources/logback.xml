@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+<!--  Uncomment this code to configure default Spring logging -->
+<!-- 
+	<include resource="org/springframework/boot/logging/logback/base.xml" /> 
+	<logger name="org.springframework" level="INFO" /> 
+-->
+
+	<appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
+		<file>trade-record.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%date %-5level %logger{35} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date %-5level: %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.neueda.trade" level="DEBUG" additivity="true">
+		<appender-ref ref="LOGFILE" />
+	</logger>
+
+	<root level="WARN">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<property name="root.level.console" value="OFF" />
+</configuration>
