@@ -1,0 +1,54 @@
+#!/bin/bash
+
+if docker ps | grep -v mysql >/dev/null 2>&1
+then
+	if docker ps -a | grep mysql >/dev/null 2>&1
+	then
+		docker start mysql
+	else
+		# MySQL
+		echo "Starting MySQL container"
+		docker run --name mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d -p 3306:3306 mysql:5.6
+
+		echo "Waiting for MySQL to be ready"
+		sleep 10
+		echo "Adding trades DB and user"
+		mysql -h127.0.0.1 -u root -pmy-secret-pw -e "
+create database trades;
+create user 'trades'@'%' IDENTIFIED BY 'trades';
+GRANT ALL PRIVILEGES ON *.* TO 'trades'@'%' IDENTIFIED BY 'trades';
+"
+		mysql -h127.0.0.1 -u root -pmy-secret-pw -e "SELECT * FROM mysql.user WHERE User = 'trades';"
+
+		echo "Adding tables and data to MySQL"
+		#mysql -h127.0.0.1 -u root -pmy-secret-pw <trade-app/src/data/create_mysql.sql
+		mysql -h127.0.0.1 -u root -pmy-secret-pw <trade-app/src/data/trades_create_mysql.sql
+	fi
+fi
+
+if docker ps | grep -v activemq >/dev/null 2>&1
+then
+	if docker ps -a | grep activemq >/dev/null 2>&1
+	then
+		docker start activemq
+	else
+		echo "Starting ActiveMQ container"
+		# ActiveMQ
+		docker run --name='activemq' -d \
+		-e 'ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT=true' \
+		-e 'ACTIVEMQ_ADMIN_LOGIN=admin' -e 'ACTIVEMQ_ADMIN_PASSWORD=admin' \
+		-e 'ACTIVEMQ_MIN_MEMORY=1024' -e  'ACTIVEMQ_MAX_MEMORY=4096' \
+		-p 8161:8161 \
+		-p 61616:61616 \
+		-p 61613:61613 \
+		webcenter/activemq:5.14.3
+	fi
+fi
+
+echo "Waiting for ActiveMQ to be ready"
+sleep 10
+
+[[ ! -d /tmp/trade-app ]] && mkdir /tmp/trade-app
+
+docker run -d --name appsrv --link mysql:mysql.server --link activemq:activemq.server -p8080:8080 -p9990:9990 -v /tmp/trade-app:/var/log/trade-app neueda/trade-app-server
+#java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9990 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar trade-app/target/trade-app-0.1.0.jar
