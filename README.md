@@ -78,8 +78,8 @@ mvn verify
 ## Run Trade Server
 
 There will be two JAR files in the **target** sub-directory:
-* target/trade-app-0.0.1-SNAPSHOT.jar
-* target/trade-app-0.0.1-SNAPSHOT.jar.original
+* target/trade-app-0.0.1.jar
+* target/trade-app-0.0.1.jar.original
 
 The first is the full trade server and all required JAR files suitable for running using the
 Spring Boot launcher, the second is the build JAR file containing the trade server classes
@@ -110,10 +110,15 @@ file **trade-record.log** in the startup directory.
 To run the server from the command line without Maven use:
 
 ```
-java -jar trade-app-0.0.1-SNAPSHOT.jar
+java -jar trade-app-0.1.0.jar
 ```
 
 **Note:** Check the version number against the POM to ensure you are using the correct JAR file.
+
+To run using the production propertis (application-prod.properties);
+```
+java -Dspring.profiles.active=prod -jar trade-app-0.1.0.jar
+```
 
 ## Injector
 
@@ -132,7 +137,7 @@ To run from the command line use the Spring Boot launcher included in the JAR fi
 indicate the main name:
 
 ```bash
-java -cp target\trade-app-0.0.2-SNAPSHOT.jar -Dloader.main=com.neueda.trade.injector.Injector org.springframework.boot.loader.PropertiesLauncher
+java -cp target/trade-app-0.1.0.jar -Dloader.main=com.neueda.trade.injector.Injector org.springframework.boot.loader.PropertiesLauncher
 ```
 
 The trade server injects a specified trades and moves them through a full (successful) trade cycle;
