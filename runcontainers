@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Run the application from the current system, 
-# but using Docker for MySQL and ActiveMQ
-
 if docker ps | grep -v mysql >/dev/null 2>&1
 then
 	if docker ps -a | grep mysql >/dev/null 2>&1
@@ -53,6 +50,5 @@ sleep 10
 
 [[ ! -d /tmp/trade-app ]] && mkdir /tmp/trade-app
 
-java -Dspring.profiles.active=prod -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9990 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar target/trade-app-0.1.0.jar &
-
-/usr/bin/java -cp target/trade-app-0.1.0.jar -Dspring.profiles.active=prod -Dloader.main=com.neueda.trade.injector.Injector org.springframework.boot.loader.PropertiesLauncher
+docker run -d --name appsrv --link mysql:mysql.server --link activemq:activemq.server -p8080:8080 -p9990:9990 -v /tmp/trade-app:/var/log/trade-app neueda/trade-app-server
+#java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9990 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar trade-app/target/trade-app-0.1.0.jar

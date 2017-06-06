@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cmdLineJMXJar=./cmdline-jmxclient-0.10.3.jar
+user=-
+password=-
+jmxHost=localhost
+port=9990
+
+#No User and password so pass '-'
+echo "Available Operations for com.neueda.trade.jmx:name=TradeStats"
+java -jar ${cmdLineJMXJar} ${user}:${password} ${jmxHost}:${port} com.neueda.trade.jmx:name=TradeStats
+
+echo "Executing XML update..."
+java -jar ${cmdLineJMXJar} - ${jmxHost}:${port} com.neueda.trade.jmx:name=TradeStats ActiveTrades

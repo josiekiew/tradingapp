@@ -330,3 +330,24 @@ Design and idiom points of interest (package names relative to **com.neueda.trad
 One thing to point out is that the Java code in the trade server is almost trivial: very few **if**  or **for**
 statements and no **while** loops, minimal arithmetic or string manipulation. It's all about moving data around
 and letting the frameworks (Spring, JDBC Templates, Rest Templates, JMS Templates and Jackson) do the heavy lifting.
+
+# Useful Information
+## Application URLs
+* Trading statistics
+  * http://localhost:8080/trades/stats
+  * Output
+    ```
+    {"totalTrades":2,"activeTrades":2,"placedTrades":2,"cancelledTrades":0,"deniedTrades":0,"rejectedTrades":0,"settledTrades":0}
+    ```
+* List trades
+  * http://localhost:8080/trades/list
+  * Output
+    ```
+    [{"id":1,"transid":"2017010108030000000","stock":{"ticker":"FTSE.AA","symbol":null,"market":null,"description":null},"ptime":1483259400000,"price":297.0,"volume":2000,"buysell":"B","state":"P","stime":1483259400000},{"id":2,"transid":"2017010108030000001","stock":{"ticker":"NYSE.C","symbol":null,"market":null,"description":null},"ptime":1483259400000,"price":58.0,"volume":8000,"buysell":"S","state":"P","stime":1483259400000}]
+    ```
+* EOD reconciliation
+  * http://localhost:8080/trades/reconcile
+  * Output
+    ```
+    {"count":174}
+    ```
