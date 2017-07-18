@@ -19,13 +19,13 @@ import com.neueda.trade.server.rules.Model;
 
 /**
  * Factory functions to create DTO objects for database access
- * 
+ *
  * @author Neueda
  *
  */
 @Component
 public class DatabaseFactory implements DtoFactory {
-	
+
 	public DatabaseFactory(@Autowired ObjectMapper mapper) {
 		SimpleModule module = new SimpleModule("CustomModel", Version.unknownVersion());
 
@@ -34,9 +34,9 @@ public class DatabaseFactory implements DtoFactory {
 		resolver.addMapping(Stock.class, StockDto.class);
 		resolver.addMapping(Market.class, MarketDto.class);
 		module.setAbstractTypes(resolver);
-		mapper.registerModule(module);	
+		mapper.registerModule(module);
 	}
-	
+
 	@JsonCreator
 	@Override
 	public Market createMarket() {
@@ -53,7 +53,7 @@ public class DatabaseFactory implements DtoFactory {
 	public Stock createStock() {
 		return new StockDto();
 	}
-	
+
 	@Override
 	public Stock createStock(String ticker) {
 		return new StockDto(ticker);
@@ -64,7 +64,7 @@ public class DatabaseFactory implements DtoFactory {
 	public Trade createTrade() {
 		return new TradeDto();
 	}
-	
+
 	@Override
 	public Trade createTrade(String transid, Stock stock, Date ptime, double price, int volume, BuySell buysell) {
 		return new TradeDto(transid, stock, ptime, price, volume, buysell);
@@ -74,7 +74,7 @@ public class DatabaseFactory implements DtoFactory {
 	public Trade tradeFromJson(String json) {
 		return Model.fromJson(json, TradeDto.class);
 	}
-	
+
 	@Override
 	public Class<? extends Trade> tradeClass() {
 		return TradeDto.class;

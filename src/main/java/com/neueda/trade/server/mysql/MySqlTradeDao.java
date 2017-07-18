@@ -28,16 +28,16 @@ import com.neueda.trade.server.rules.Model;
 
 /**
  * MySQL DAO for to access the Trade table.
- * 
+ *
  * @author Neueda
  *
  */
 @Component
 public class MySqlTradeDao implements TradeDao {
-    
+
     @Autowired
     private JdbcTemplate tpl;
-    
+
     @Override
     public int rowCount() {
         return tpl.queryForObject("select count(*) from Trades", Integer.class);
@@ -47,7 +47,7 @@ public class MySqlTradeDao implements TradeDao {
     public List<Trade> findAll() {
         return this.tpl.query("select id, transid, stock, ptime, price, volume, buysell, state, stime from Trades order by transid", new TradeMapper());
     }
-    
+
     @Override
     public Trade findById(int id) {
         List<Trade> trades = this.tpl.query(
@@ -87,15 +87,15 @@ public class MySqlTradeDao implements TradeDao {
     public Trade updateState(Trade trade) {
         int count = this.tpl.update(
                 "update Trades set state=?, stime=? where id=?",
-                Model.fromJson(Model.toJson(trade.getState()), String.class), 
-                new Timestamp(trade.getStime().getTime()), 
+                Model.fromJson(Model.toJson(trade.getState()), String.class),
+                new Timestamp(trade.getStime().getTime()),
                 trade.getId());
         if (count != 1) {
             throw new TradeException("Update failed: trade %d not found", trade.getId());
         }
     	return trade;
     }
-   
+
     @Override
 	public int clear() {
         return this.tpl.update("delete from Trades");
@@ -131,15 +131,15 @@ public class MySqlTradeDao implements TradeDao {
         );
         return Model.validateFindUnique(trades, transid, "trade transaction id");
 	}
-	
+
     @Override
     public int modify(Trade trade) {
         int count = this.tpl.update(
                 "update Trades set price=?, volume=?, state=?, stime=? where id=?",
-                trade.getPrice(), 
-                trade.getVolume(), 
-                Model.fromJson(Model.toJson(trade.getState()), String.class), 
-                new Timestamp(trade.getStime().getTime()), 
+                trade.getPrice(),
+                trade.getVolume(),
+                Model.fromJson(Model.toJson(trade.getState()), String.class),
+                new Timestamp(trade.getStime().getTime()),
                 trade.getId());
         if (count != 1) {
             throw new TradeException("Update failed: trade %d not found", trade.getId());

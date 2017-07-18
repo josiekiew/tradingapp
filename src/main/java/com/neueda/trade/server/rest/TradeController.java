@@ -37,13 +37,13 @@ public class TradeController {
 
     @Autowired
     private Operations operations;
-    
+
     @Autowired
     private Model model;
-        
+
     @Autowired
     private DtoFactory factory;
-    
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List<Trade> list() {
         List<Trade> trades = tradeDao.findAll();
@@ -56,21 +56,22 @@ public class TradeController {
     	logger.info("REST place: {}", trade);
     	return operations.place(trade);
     }
-    		
+
     @RequestMapping(value = "/place", method = {RequestMethod.POST},
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	public Trade place(@RequestParam Map<String,String> form) {
     	Trade trade = factory.createTrade();
     	trade.setTransid(form.get("transid"));
     	trade.setStock(factory.createStock(form.get("stock")));
-		trade.setPtime(model.parseTime(form.get("ptime")));
-		trade.setPrice(Double.parseDouble(form.get("price")));
-		trade.setVolume(Integer.parseInt(form.get("volume")));
-		trade.setBuysell(Model.fromJson(form.get("buysell"), BuySell.class));
+		  trade.setPtime(model.parseTime(form.get("ptime")));
+		  trade.setPrice(Double.parseDouble(form.get("price")));
+		  trade.setVolume(Integer.parseInt(form.get("volume")));
+		  trade.setBuysell(Model.fromJson(form.get("buysell"), BuySell.class));
+
     	logger.info("REST form place: {}", trade);
     	return operations.place(trade);
     }
-    
+
     @RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
     public Trade find(@PathVariable int id) {
         return tradeDao.findById(id);
@@ -97,7 +98,7 @@ public class TradeController {
     	logger.info("REST modify: transid={} price={} volume={}", transid, values.getPrice(), values.getVolume());
 		return operations.modify(transid, values.getPrice(), values.getVolume());
 	}
-	
+
     @RequestMapping(value = "/modify", method = {RequestMethod.POST},
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	public Trade modify(@RequestParam String transid, @RequestParam double price, @RequestParam int volume) {
@@ -110,7 +111,7 @@ public class TradeController {
     	logger.info("REST accept: id={}", transid);
         return operations.accept(transid);
     }
-    
+
     @RequestMapping(value = "/deny/{transid}", method = {RequestMethod.GET, RequestMethod.POST})
     public Trade deny(@PathVariable String transid) {
     	logger.info("REST deny: id={}", transid);
@@ -141,5 +142,5 @@ public class TradeController {
     public TradeStats stats() {
         return tradeStats;
     }
-  
+
 }
